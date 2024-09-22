@@ -8,10 +8,27 @@ button {
     font-size: 50px;
 }
 
-input {
-    width: 224px;
+.input {
+    display: flex;
+    justify-content: space-around;
+}
+
+#input {
+    width: 194px;
     height: 80px;
     background-color: rgb(230, 230, 230);
+    text-align: right;
+    font-family: "Orbitron", sans-serif;
+    font-size: 30px;
+}
+
+#ngtInput {
+    width: 20px;
+    height: 80px;
+    background-color: rgb(230, 230, 230);
+    text-align: right;
+    font-family: "Orbitron", sans-serif;
+    font-size: 30px;
 }
 
 body {
@@ -31,10 +48,32 @@ body {
     box-shadow: 0px 5px rgb(65, 65, 78);
 }
 
-.input {
+.buttons {
     display: flex;
 }
 
-.buttons {
+#clr {
+    width: 116px;
+    background-color: rgb(196, 55, 55)
+}
+
+#clr-btn {
     display: flex;
+    justify-content: space-between;
+}
+
+#eql {
+    background-color: rgb(84, 169, 84);
+}
+
+.operator {
+    background-color: rgb(175, 175, 175);
+}
+
+.decimal {
+    background-color: rgb(112, 84, 125);
+}
+
+#negative {
+    background-color: rgb(171, 159, 112)
 }

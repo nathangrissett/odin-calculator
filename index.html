@@ -5,38 +5,484 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div class="input">
-            <input type="text">
+            <textarea id="ngtInput"></textarea>
+            <textarea id="input" rows="2" cols="8"></textarea>
         </div>
         <div class="buttons">
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>/</button>
+            <button class="pop">7</button>
+            <button class="pop">8</button>
+            <button class="pop">9</button>
+            <button class="operator" id="divide">/</button>
         </div>
         <div class="buttons">
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>*</button>
+            <button class="pop">4</button>
+            <button class="pop">5</button>
+            <button class="pop">6</button>
+            <button class="operator" id="multiply">*</button>
         </div>
         <div class="buttons">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>-</button>
+            <button class="pop">1</button>
+            <button class="pop">2</button>
+            <button class="pop">3</button>
+            <button class="operator" id="subtract">-</button>
         </div>
         <div class="buttons">
-            <button>0</button>
-            <button>.</button>
-            <button>=</button>
-            <button>+</button>
+            <button class="zero">0</button>
+            <button class="decimal">.</button>
+            <button class="operator" id="eql">=</button>
+            <button class="operator" id="add">+</button>
+        </div>
+        <div class="buttons" id="clr-btn">
+            <button id="clr">CLR</button>
+            <button id="negative">(-)</button>
         </div>
     </div>  
     <script>
+        let num1;
+        let operator;
+        let num2;
+
+        function add(a, b) {
+            let sum = parseFloat((a + b).toFixed(10));
+            return sum;
+            console.log(sum);
+        }
+        function subtract(a, b) {
+            let diff = parseFloat((a - b).toFixed(10));
+            return diff;
+            console.log(diff);
+        }
+        function multiply(a, b) {
+            let product = parseFloat((a * b).toFixed(10));
+            return product;
+            console.log(product);
+        }
+        function divide(a, b) {
+            if (b === 0) return "undefined - press CLR";
+            let quotient = parseFloat((a / b).toFixed(10));
+            return quotient;
+            console.log(quotient);
+        }
+
+        function operate(a, op, b) {
+            if (op == "+") return add(a, b);
+            if (op == "-") return subtract(a, b);
+            if (op == "*") return multiply(a, b);
+            if (op == "/") return divide(a, b);
+        }
+
+        const button = document.querySelectorAll("button");
+        const pop = document.querySelectorAll(".pop");
+        const zero = document.querySelector(".zero");
+        const decimal = document.querySelector(".decimal");
+        const input = document.querySelector("#input");
+        const ngtInput = document.querySelector("#ngtInput");
+        const op = document.querySelectorAll(".operator");
+        const division = document.querySelector("#divide");
+        const multiplication = document.querySelector("#multiply");
+        const addition = document.querySelector("#add");
+        const subtraction = document.querySelector("#subtract");
+        const equal = document.querySelector("#eql");
+        const clr = document.querySelector("#clr");
+        const negative = document.querySelector("#negative");
+        let displayValue = "";
+        let lastButton = "";
+        let ngtCount = [];
+        let result;
+
+        zero.addEventListener("click", () => {
+            if (lastButton == "/"
+                || lastButton == "*"
+                || lastButton == "+"
+                || lastButton == "-"
+                || lastButton == "(-)") {
+                    input.value = "";
+                    if (ngtInput.value == "-") {
+                        ngtInput.value = "";
+                      }
+            }
+            if (lastButton == "=") {
+                input.value = "";
+                displayValue = "";
+                ngtInput.value = "";
+                ngtCount = [];
+            }
+            if (input.value != "0") {
+            input.value += zero.textContent;
+            }
+        });
+
+        decimal.addEventListener("click", () => {
+            if (lastButton == "/"
+                || lastButton == "*"
+                || lastButton == "+"
+                || lastButton == "-"
+                || lastButton == "(-)") {
+                    input.value = "";
+                    if (ngtInput.value == "-") {
+                        ngtInput.value = "";
+                      }
+            }
+            if (lastButton == "=") {
+                input.value = "";
+                displayValue = "";
+                ngtInput.value = "";
+                ngtCount = [];
+            }
+            if (!(input.value.includes("."))) {
+            input.value += decimal.textContent;
+            }
+        });
+        
+        pop.forEach(pop => {
+            pop.addEventListener("click", () => {
+                if (lastButton == "/"
+                    || lastButton == "*"
+                    || lastButton == "+"
+                    || lastButton == "-"
+                    || lastButton == "(-)") {
+                      input.value = "";
+                      if (ngtInput.value == "-") {
+                        ngtInput.value = "";
+                      }
+                }
+                if (lastButton == "=") {
+                    input.value = "";
+                    displayValue = "";
+                    ngtInput.value = "";
+                    ngtCount = [];
+                }
+                input.value += pop.textContent;
+            });
+        });
+
+        negative.addEventListener("click", () => {
+            if (!(ngtInput.value.includes('-'))) {
+                ngtInput.value = '-';
+            } else {
+                ngtInput.value = ''
+            }
+        });
+
+        op.forEach(op => {
+            op.addEventListener("click", () => {
+                if (lastButton !== "="
+                    && lastButton !== '+'
+                    && lastButton !== '-'
+                    && lastButton !== '*'
+                    && lastButton !== '/') {
+                    displayValue += input.value;
+                }
+            })
+        });
+
+        clr.addEventListener("click", () => {
+            input.value = "";
+            displayValue = "";
+            ngtInput.value = "";
+            ngtCount = [];
+        });
+
+        division.addEventListener("click", () => {
+            if (lastButton != "=") {
+                if (ngtInput.value == "-") {
+                    ngtCount.push("YES");
+                    console.log(`ngtCount: ${ngtCount}`);
+                } else {
+                    ngtCount.push("NO");
+                    console.log(`ngtCount: ${ngtCount}`);
+                }
+            }
+            let operands = "";
+            if (displayValue.includes('/')
+                || displayValue.includes('*')
+                || displayValue.includes('+')
+                || displayValue.includes('-')) {
+                operands = displayValue.split(/[\+\-\*\/]/);
+                const operator = displayValue.match(/[\+\-\*\/]/)[0];
+
+                if (operands.length === 2 && ngtCount[0] == "YES" && ngtCount[1] == "NO") {
+                result = operate(parseFloat(operands[0] * (-1)), operator, parseFloat(operands[1]));
+            } else if (operands.length === 2 && ngtCount[1] == "YES" && ngtCount[0] == "NO") {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2 && ngtCount [1] == "YES" && ngtCount[0] == "YES") {
+                result = operate(parseFloat(operands[0]) * (-1), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2) {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]));
+            }
+            if (result < 0) {
+                    result = result * (-1);
+                    ngtInput.value = "-";
+            } else {
+                ngtInput.value = "";
+            }
+            input.value = result;
+            displayValue = result.toString();
+            console.log(displayValue);
+            }
+            if (lastButton !== "+"
+                && lastButton !== "-"
+                && lastButton !== "*"
+                && lastButton !== "/") {
+                displayValue += "/";
+                console.log(displayValue);
+            }
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            console.log(`operands: ${operands}`);
+            if (ngtInput.value == "-" && ngtCount[0] == "NO") {
+                ngtCount[0] = "YES";
+                console.log(ngtCount);
+            }
+            if (ngtInput.value == "" && ngtCount[0] == "YES") {
+                ngtCount[0] = "NO";
+                console.log(ngtCount);
+            }
+        });
+
+        multiplication.addEventListener("click", () => {
+            if (lastButton != "=") {
+                if (ngtInput.value == "-") {
+                    ngtCount.push("YES");
+                    console.log(`ngtCount: ${ngtCount}`);
+                } else {
+                    ngtCount.push("NO");
+                    console.log(`ngtCount: ${ngtCount}`);
+                }
+            }
+            let operands = "";
+            if (displayValue.includes('*')
+                || displayValue.includes('/')
+                || displayValue.includes('+')
+                || displayValue.includes('-')) {
+                operands = displayValue.split(/[\+\-\*\/]/);
+                const operator = displayValue.match(/[\+\-\*\/]/)[0];
+
+                if (operands.length === 2 && ngtCount[0] == "YES" && ngtCount[1] == "NO") {
+                result = operate(parseFloat(operands[0] * (-1)), operator, parseFloat(operands[1]));
+            } else if (operands.length === 2 && ngtCount[1] == "YES" && ngtCount[0] == "NO") {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2 && ngtCount [1] == "YES" && ngtCount[0] == "YES") {
+                result = operate(parseFloat(operands[0]) * (-1), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2) {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]));
+            }
+            if (result < 0) {
+                    result = result * (-1);
+                    ngtInput.value = "-";
+                    console.log(`result: ${result}`)
+            } else {
+                ngtInput.value = "";
+            }
+            input.value = result;
+            displayValue = result.toString();
+            console.log(displayValue);
+            }
+            if (lastButton !== "+"
+                && lastButton !== "-"
+                && lastButton !== "*"
+                && lastButton !== "/") {
+                displayValue += "*";
+                console.log(displayValue);
+            }
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            console.log(`operands: ${operands}`);
+            if (ngtInput.value == "-" && ngtCount[0] == "NO") {
+                ngtCount[0] = "YES";
+                console.log(ngtCount);
+            }
+            if (ngtInput.value == "" && ngtCount[0] == "YES") {
+                ngtCount[0] = "NO";
+                console.log(ngtCount);
+            }
+        });
+
+        addition.addEventListener("click", () => {
+            if (lastButton != "=") {
+                if (ngtInput.value == "-") {
+                    ngtCount.push("YES");
+                    console.log(`ngtCount: ${ngtCount}`);
+                } else {
+                    ngtCount.push("NO");
+                    console.log(`ngtCount: ${ngtCount}`);
+                }
+            }
+            let operands = "";
+            if (displayValue.includes('+')
+                || displayValue.includes('/')
+                || displayValue.includes('*')
+                || displayValue.includes('-')) {
+                operands = displayValue.split(/[\+\-\*\/]/);
+                const operator = displayValue.match(/[\+\-\*\/]/)[0];
+                if (operands.length === 2 && ngtCount[0] == "YES" && ngtCount[1] == "NO") {
+                result = operate(parseFloat(operands[0] * (-1)), operator, parseFloat(operands[1]));
+            } else if (operands.length === 2 && ngtCount[1] == "YES" && ngtCount[0] == "NO") {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2 && ngtCount [1] == "YES" && ngtCount[0] == "YES") {
+                result = operate(parseFloat(operands[0]) * (-1), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2) {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]));
+            }
+            if (result < 0) {
+                    result = result * (-1);
+                    ngtInput.value = "-";
+            } else {
+                ngtInput.value = "";
+            }
+            input.value = result;
+            displayValue = result.toString();
+            console.log(displayValue);
+        }
+            if (lastButton !== "+"
+                && lastButton !== "-"
+                && lastButton !== "*"
+                && lastButton !== "/") {
+                displayValue += "+";
+                console.log(displayValue);
+            }
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            console.log(`operands: ${operands}`);
+            if (ngtInput.value == "-" && ngtCount[0] == "NO") {
+                ngtCount[0] = "YES";
+                console.log(ngtCount);
+            }
+            if (ngtInput.value == "" && ngtCount[0] == "YES") {
+                ngtCount[0] = "NO";
+                console.log(ngtCount);
+            }
+        });
+
+        subtraction.addEventListener("click", () => {
+            if (lastButton != "=") {
+                if (ngtInput.value == "-") {
+                    ngtCount.push("YES");
+                    console.log(`ngtCount: ${ngtCount}`);
+                } else {
+                    ngtCount.push("NO");
+                    console.log(`ngtCount: ${ngtCount}`);
+                }
+            }
+        let operands = "";
+            if (displayValue.includes('-')
+                || displayValue.includes('/')
+                || displayValue.includes('+')
+                || displayValue.includes('*')) {
+                operands = displayValue.split(/[\+\-\*\/]/);
+                const operator = displayValue.match(/[\+\-\*\/]/)[0];
+                if (operands.length === 2 && ngtCount[0] == "YES" && ngtCount[1] == "NO") {
+                result = operate(parseFloat(operands[0] * (-1)), operator, parseFloat(operands[1]));
+            } else if (operands.length === 2 && ngtCount[1] == "YES" && ngtCount[0] == "NO") {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2 && ngtCount [1] == "YES" && ngtCount[0] == "YES") {
+                result = operate(parseFloat(operands[0]) * (-1), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2) {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]));
+            }
+            if (result < 0) {
+                    result = result * (-1);
+                    ngtInput.value = "-";
+            } else {
+                ngtInput.value = "";
+            }
+            input.value = result;
+            displayValue = result.toString();
+            console.log(displayValue);
+            }
+            if (lastButton !== "+"
+                && lastButton !== "-"
+                && lastButton !== "*"
+                && lastButton !== "/") {
+                displayValue += "-";
+                console.log(displayValue);
+            }
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            console.log(`operands: ${operands}`);
+            if (ngtInput.value == "-" && ngtCount[0] == "NO") {
+                ngtCount[0] = "YES";
+                console.log(ngtCount);
+            }
+            if (ngtInput.value == "" && ngtCount[0] == "YES") {
+                ngtCount[0] = "NO";
+                console.log(ngtCount);
+            }
+        });
+
+        button.forEach(button => {
+            button.addEventListener("click", () => {
+                if (lastButton !== "CLR") {
+                    lastButton = button.textContent;
+                    console.log(lastButton);
+                } else {
+                    lastButton = "";
+                }
+            });
+        });
+
+        equal.addEventListener("click", () => {
+            if (ngtInput.value == "-") {
+                ngtCount.push("YES");
+                console.log(`ngtCount: ${ngtCount}`);
+            } else {
+                ngtCount.push("NO");
+                console.log(`ngtCount: ${ngtCount}`);
+            }
+            let operands = "";
+            operands = displayValue.split(/[\+\-\*\/]/);
+            const operator = displayValue.match(/[\+\-\*\/]/)[0];
+            if (operands.length === 2 && ngtCount[0] == "YES" && ngtCount[1] == "NO") {
+                result = operate(parseFloat(operands[0] * (-1)), operator, parseFloat(operands[1]));
+            } else if (operands.length === 2 && ngtCount[1] == "YES" && ngtCount[0] == "NO") {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2 && ngtCount [1] == "YES" && ngtCount[0] == "YES") {
+                result = operate(parseFloat(operands[0]) * (-1), operator, parseFloat(operands[1]) * (-1));
+            } else if (operands.length === 2) {
+                result = operate(parseFloat(operands[0]), operator, parseFloat(operands[1]));
+            }
+            if (result < 0) {
+                    result = result * (-1);
+                    ngtInput.value = "-";
+            } else {
+              ngtInput.value = "";
+            }
+            input.value = result;
+            displayValue = result.toString();
+            console.log(displayValue);
+            if (operands.length === 2) {
+                ngtCount.shift();
+                console.log(ngtCount);
+            }
+            console.log(`operands: ${operands}`)
+            if (ngtInput.value == "-" && ngtCount[0] == "NO") {
+                ngtCount[0] = "YES";
+                console.log(ngtCount);
+            }
+            if (ngtInput.value == "" && ngtCount[0] == "YES") {
+                ngtCount[0] = "NO";
+                console.log(ngtCount);
+            }
+        });
 
     </script>
 </body>
